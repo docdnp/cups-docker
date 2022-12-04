@@ -21,7 +21,9 @@ runs:
 
     - name: Check tag name
       run: |
-        [ -z "${{ steps.regex-match.outputs.match }}" ] && false
+        [ -z "${{ steps.regex-match.outputs.match }}" ] \
+        && echo 'Tag doesn't match: ^v\d+\.\d+\.\d+\$'
+        && false
       shell: bash
 
     - name: Login to docker hub
