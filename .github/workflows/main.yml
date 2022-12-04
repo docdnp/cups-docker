@@ -10,8 +10,8 @@ jobs:
 
       - name: Login to docker hub
         run: |
-          echo "[${{ secrets.DOCKER_USER }}";
-          echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
+          echo "[${{ secrets.DOCKER_USER }}]";
+          echo "${{ secrets.DOCKER_TOKEN }}"" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
 
 
