@@ -1,8 +1,9 @@
 name: Publish docker images on docker hub
 run-name: Publishing docker images
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
 jobs:
   Build-and-publish-for-i386:
     runs-on: ubuntu-latest
