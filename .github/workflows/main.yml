@@ -4,45 +4,27 @@ run-name: Publishing docker images
 #   release:
 #     types: [published]
 on: push
-check-tag-name: &check-tag
-  - uses: actions-ecosystem/action-regex-match@v2
-    id: regex-match
-    with:
-      text: ${{ github.ref_name }}
-      regex: '^v\d+\.\d+\.\d+\$'
-
-  - name: Check tag name
-    run: |
-      [ -z "${{ steps.regex-match.outputs.match }}" ] && false
-
 jobs:
   Build-and-publish-for-i386: 
     runs-on: ubuntu-latest
     steps:
-      <<: *check-tag
+      - uses: actions/publish@v1
+        with:
+          arch: i386
 
-      - name: Check out repository code
-        uses: actions/checkout@v3
-
-      - name: Login to docker hub
-        run: |
-          echo "[${{ secrets.DOCKER_USER }}]";
-          echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
-
-      - name: Create 
-        run: |
-          echo $;
-          ./build.sh i386
-
-      - name: Tag and push 
-        run: |
-          IMAGE=$(cat /tmp/IMAGE);
-          docker push $IMAGE
 
   Build-and-publish-for-amd64:
     runs-on: ubuntu-latest
     steps:
-      <<: *check-tag
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ github.ref_name }}
+          regex: '^v\d+\.\d+\.\d+\$'
+
+      - name: Check tag name
+        run: |
+          [ -z "${{ steps.regex-match.outputs.match }}" ] && false
 
       - name: Check out repository code
         uses: actions/checkout@v3
