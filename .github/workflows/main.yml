@@ -14,6 +14,8 @@ jobs:
       - uses: ./.github/actions/publish
         with:
           arch: i386
+          docker_user:  ${{ secrets.DOCKER_USER }}
+          docker_token: ${{ secrets.DOCKER_TOKEN }}
 
 
   Build-and-publish-for-amd64:

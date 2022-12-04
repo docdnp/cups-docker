@@ -4,6 +4,12 @@ inputs:
   arch:  # id of input
     description: 'Either "amd64" or "i386".'
     required: true
+  docker_user:
+    description: 'Username with push access to docker registry.'
+    required: true
+  docker_toker:
+    description: 'Token for user with push access to docker registry.'
+    required: true
 runs:
   using: "composite"
   steps:
@@ -20,8 +26,7 @@ runs:
 
     - name: Login to docker hub
       run: |
-        echo "[${{ secrets.DOCKER_USER }}]";
-        echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+        echo "${{ input.docker_token }}" | docker login -u "${{ input.docker_user }}" --password-stdin
       shell: bash
 
     - name: Create 
