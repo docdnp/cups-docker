@@ -27,7 +27,8 @@ runs:
       id: check-tag-name
       run: |
         [ -z "${{ steps.regex-match.outputs.match }}" ] \
-        && echo "result='Tag ${{ github.ref_name }} has invalid format.'" >> $GITHUB_OUTPUT
+        && echo "result='Tag ${{ github.ref_name }} has invalid format.'" >> $GITHUB_OUTPUT \
+        && false
       shell: bash
 
     - name: Login to docker hub
