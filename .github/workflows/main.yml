@@ -8,7 +8,7 @@ jobs:
   Build-and-publish-for-i386: 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/publish@v1
+      - uses: ./.github/actions/publish
         with:
           arch: i386
 
