@@ -38,14 +38,22 @@ runs:
       run: |
         echo "${{ inputs.docker_token }}" \
           | docker login -u "${{ inputs.docker_user }}" --password-stdin \
-          || echo "ERROR: Login to docker registry failed."
+          || { 
+            echo "ERROR: Login to docker registry failed." ; 
+            false ; 
+          }
+        true
       shell: bash
 
     - name: Create 
       id: create
       run: |
         ./build.sh ${{ inputs.arch }} ${{ github.ref_name }} \
-        || echo "ERROR: Building docker image failed."
+          || {
+            echo "ERROR: Building docker image failed.";
+            false;
+          }
+        true
       shell: bash
 
     - name: Tag and push 
@@ -53,5 +61,9 @@ runs:
       run: |
         IMAGE=$(cat /tmp/IMAGE);
         docker push $IMAGE \
-        || echo "ERROR: Pushing $IMAGE to docker registry failed."
+          || {
+            echo "ERROR: Pushing $IMAGE to docker registry failed.";
+            false;
+          }
+        true
       shell: bash
