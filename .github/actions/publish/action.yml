@@ -17,7 +17,8 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions-ecosystem/action-regex-match@v2
+    - name: Prepare checking tag name
+      uses: actions-ecosystem/action-regex-match@v2
       id: regex-match
       with:
         text: ${{ github.ref_name }}
