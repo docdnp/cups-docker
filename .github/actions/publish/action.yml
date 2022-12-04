@@ -13,7 +13,7 @@ inputs:
 outputs:
   result:
     description: "Error Text"
-    value: ${{ steps.check-tag-name.outputs.random-id }}
+    value: ${{ steps.check-tag-name.outputs.result }}
 runs:
   using: "composite"
   steps:
@@ -27,7 +27,7 @@ runs:
       id: check-tag-name
       run: |
         [ -z "${{ steps.regex-match.outputs.match }}" ] \
-        && echo "Tag doesn't match: "'^v\d+\.\d+\.\d+\$' >> $GITHUB_OUTPUT
+        && echo "result="Tag ${{ github.ref_name }} has invalid format." >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Login to docker hub
