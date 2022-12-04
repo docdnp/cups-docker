@@ -2,7 +2,7 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
-  Build and publish for i386:
+  Build-and-publish-for-i386:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
