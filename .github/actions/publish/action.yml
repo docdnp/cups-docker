@@ -30,6 +30,7 @@ runs:
             echo "ERROR: Tag '$REFNAME' has invalid format." ; 
             false ;
         }
+        true
       shell: bash
 
     - name: Login to docker hub
