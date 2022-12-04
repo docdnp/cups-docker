@@ -18,7 +18,7 @@ runs:
       id: regex-match
       with:
         text: ${{ github.ref_name }}
-        regex: '^v\d+\.\d+\.\d+\$'
+        regex: '^v\d+\.\d+\.\d+$'
 
     - name: Check tag name
       id: check-tag-name
