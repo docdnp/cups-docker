@@ -10,6 +10,10 @@ inputs:
   docker_token:
     description: 'Token for user with push access to docker registry.'
     required: true
+outputs:
+  result:
+    description: "Error Text"
+    value: ${{ steps.check-tag-name.outputs.random-id }}
 runs:
   using: "composite"
   steps:
@@ -20,23 +24,27 @@ runs:
         regex: '^v\d+\.\d+\.\d+\$'
 
     - name: Check tag name
+      id: check-tag-name
       run: |
         [ -z "${{ steps.regex-match.outputs.match }}" ] \
-        && echo 'Tag doesn't match: ^v\d+\.\d+\.\d+\$'
+        && echo 'Tag doesn't match: ^v\d+\.\d+\.\d+\$' >> $GITHUB_OUTPUT \
         && false
       shell: bash
 
     - name: Login to docker hub
+      id: login-to-docker-hub
       run: |
         echo "${{ inputs.docker_token }}" | docker login -u "${{ inputs.docker_user }}" --password-stdin
       shell: bash
 
     - name: Create 
+      id: create
       run: |
         ./build.sh ${{ inputs.arch }} ${{ github.ref_name }}
       shell: bash
 
     - name: Tag and push 
+      id: tag-and-push
       run: |
         IMAGE=$(cat /tmp/IMAGE);
         docker push $IMAGE
