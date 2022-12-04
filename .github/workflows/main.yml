@@ -4,19 +4,22 @@ run-name: Publishing docker images
 #   release:
 #     types: [published]
 on: push
+check-tag-name: &check-tag
+  - uses: actions-ecosystem/action-regex-match@v2
+    id: regex-match
+    with:
+      text: ${{ github.ref_name }}
+      regex: '^v\d+\.\d+\.\d+\$'
+
+  - name: Check tag name
+    run: |
+      [ -z "${{ steps.regex-match.outputs.match }}" ] && false
+
 jobs:
   Build-and-publish-for-i386: 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions-ecosystem/action-regex-match@v2
-        id: regex-match
-        with:
-          text: ${{ github.ref_name }}
-          regex: '^v\d+\.\d+\.\d+\$'
-
-      - name: Check tag name
-        run: |
-          [ -z "${{ steps.regex-match.outputs.match }}" ] && false
+      <<: *check-tag
 
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -39,15 +42,7 @@ jobs:
   Build-and-publish-for-amd64:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions-ecosystem/action-regex-match@v2
-        id: regex-match
-        with:
-          text: ${{ github.ref_name }}
-          regex: '^v\d+\.\d+\.\d+\$'
-
-      - name: Check tag name
-        run: |
-          [ -z "${{ steps.regex-match.outputs.match }}" ] && false
+      <<: *check-tag
 
       - name: Check out repository code
         uses: actions/checkout@v3
