@@ -13,10 +13,12 @@ jobs:
           echo "[${{ secrets.DOCKER_USER }}]";
           echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
-
-
       - name: Create 
         run: |
           ./build.sh i386
 
+      - name: Tag and push 
+        run: |
+          docker tag cups-docker:epson-i386 thednp/cups-docker:epson-i386
+          docker push thednp/cups-docker:epson-i386
 
