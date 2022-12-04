@@ -8,6 +8,9 @@ jobs:
   Build-and-publish-for-i386: 
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
       - uses: ./.github/actions/publish
         with:
           arch: i386
