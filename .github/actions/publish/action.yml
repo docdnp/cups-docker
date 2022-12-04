@@ -27,6 +27,7 @@ runs:
     - name: Check tag name
       id: check-tag-name
       run: |
+        echo "Checking tag name: Did regex match?";
         [ -z "${{ steps.regex-match.outputs.match }}" ] \
         && echo "result='Tag ${{ github.ref_name }} has invalid format.'" >> $GITHUB_OUTPUT \
         && false
