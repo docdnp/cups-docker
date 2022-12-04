@@ -14,12 +14,15 @@ jobs:
           text: ${{ github.ref_name }}
           regex: '^v\d+\.\d+\.\d+\$'
 
+      - name: Check tag name
+        run: |
+          [ -z "${{ steps.regex-match.outputs.match }}" ] && false
+
       - name: Check out repository code
         uses: actions/checkout@v3
 
       - name: Login to docker hub
         run: |
-          echo "[${{ github.ref_name }}]"; false;
           echo "[${{ secrets.DOCKER_USER }}]";
           echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
@@ -42,12 +45,15 @@ jobs:
           text: ${{ github.ref_name }}
           regex: '^v\d+\.\d+\.\d+\$'
 
+      - name: Check tag name
+        run: |
+          [ -z "${{ steps.regex-match.outputs.match }}" ] && false
+
       - name: Check out repository code
         uses: actions/checkout@v3
 
       - name: Login to docker hub
         run: |
-          echo "[${{ github.ref_name }}]"; false;
           echo "[${{ secrets.DOCKER_USER }}]";
           echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
