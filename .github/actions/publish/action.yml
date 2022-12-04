@@ -27,8 +27,7 @@ runs:
       id: check-tag-name
       run: |
         [ -z "${{ steps.regex-match.outputs.match }}" ] \
-        && echo "Tag doesn't match: "'^v\d+\.\d+\.\d+\$' >> $GITHUB_OUTPUT \
-        && false
+        && echo "Tag doesn't match: "'^v\d+\.\d+\.\d+\$' >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Login to docker hub
