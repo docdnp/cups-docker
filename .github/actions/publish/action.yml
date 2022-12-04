@@ -16,20 +16,21 @@ runs:
     - name: Check tag name
       run: |
         [ -z "${{ steps.regex-match.outputs.match }}" ] && false
-
-    - name: Check out repository code
-      uses: actions/checkout@v3
+      shell: bash
 
     - name: Login to docker hub
       run: |
         echo "[${{ secrets.DOCKER_USER }}]";
         echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+      shell: bash
 
     - name: Create 
       run: |
         ./build.sh ${{ inputs.arch }} ${{ github.ref_name }}
+      shell: bash
 
     - name: Tag and push 
       run: |
         IMAGE=$(cat /tmp/IMAGE);
         docker push $IMAGE
+      shell: bash
