@@ -7,7 +7,7 @@ inputs:
   docker_user:
     description: 'Username with push access to docker registry.'
     required: true
-  docker_toker:
+  docker_token:
     description: 'Token for user with push access to docker registry.'
     required: true
 runs:
