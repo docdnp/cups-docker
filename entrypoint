@@ -40,7 +40,7 @@ elif    [ "$1" == start-cups ] ; then
     /etc/init.d/cups start
     while true; do sleep 3600 ; done
 elif    [ "$1" == container-handler ] ; then
-    sed -r -e 's/^ARCH=.*/ARCH='$ARCH'/' /bin/cups-docker
+    sed -r -e 's/^IMAGE=.*/IMAGE='$IMAGE'/' /bin/cups-docker
 else
     help
 fi

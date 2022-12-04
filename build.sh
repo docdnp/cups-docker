@@ -3,10 +3,14 @@ DIGEST_i386=sha256:10166dad34cdf72a266a441988344f477cd7af7c05ed5b07006a08f46e006
 DIGEST_amd64=sha256:303c4ff282901160a0009411a7f0e76b1f1439e20c2f64703bf8f49ef0a18daa
 
 ARCH=$1
-IMAGE=cups-docker:epson-$ARCH
+VERSION=$2
+
+[ -n "$VERSION" ] && VERSION=-$VERSION
+
+IMAGE=thednp/cups-docker:epson-$ARCH$VERSION
 
 [ -z "$ARCH" ] || [[ ! "$ARCH" =~ ^(amd64|i386)$ ]] && {
-    echo "./build.sh [amd64|i386]" && exit 
+    echo "./build.sh (amd64|i386) [VERSION]" && exit 
 }
 
 PLATFORM=$ARCH
@@ -51,3 +55,5 @@ docker build \
     --build-arg IMAGE=$IMAGE \
     --platform linux/$PLATFORM \
     .
+
+echo $IMAGE > /tmp/IMAGE
