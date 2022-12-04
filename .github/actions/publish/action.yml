@@ -26,7 +26,7 @@ runs:
         echo "Checking tag name: Did regex match? => [${{ steps.regex-match.outputs.match }}]";
         REMATCH="${{ steps.regex-match.outputs.match }}";
         REFNAME="${{ github.ref_name }}";
-        [ -z "$REMATCH" ] && ./error "ERROR: Tag '$REFNAME' has invalid format." 
+        [ -z "$REMATCH" ] && ${{ github.action_path }}/publish/error "ERROR: Tag '$REFNAME' has invalid format." 
       shell: bash
 
     - name: Login to docker hub
