@@ -1,0 +1,45 @@
+name: Publish docker images on docker hub
+run-name: Publishing docker images
+on:
+  release:
+    types: [published]
+jobs:
+  Build-and-publish-for-i386:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Login to docker hub
+        run: |
+          echo "[${{ secrets.DOCKER_USER }}]";
+          echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+
+      - name: Create 
+        run: |
+          ./build.sh i386
+
+      - name: Tag and push 
+        run: |
+          docker tag cups-docker:epson-i386 thednp/cups-docker:epson-i386
+          docker push thednp/cups-docker:epson-i386
+
+  Build-and-publish-for-amd64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Login to docker hub
+        run: |
+          echo "[${{ secrets.DOCKER_USER }}]";
+          echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+
+      - name: Create 
+        run: |
+          ./build.sh amd64
+
+      - name: Tag and push 
+        run: |
+          docker tag cups-docker:epson-amd64 thednp/cups-docker:epson-amd64
+          docker push thednp/cups-docker:epson-amd64

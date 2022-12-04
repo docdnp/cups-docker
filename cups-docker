@@ -1,0 +1,82 @@
+#!/bin/bash
+
+ME=$(basename "$0")
+
+CONTAINER=cups-docker
+ARCH=${ARCH:-amd64}
+IMAGE=${IMAGE:-cups-docker:epson-amd64}
+SRV_ADDRESS="127.0.0.1:632"
+SRV_REGEXP="[[:blank:]]*ServerName[[:blank:]]+$SRV_ADDRESS"
+COMMENT='^[[:blank:]]*#*[[:blank:]]*'
+CLIENTCONF=/etc/cups/client.conf
+
+start () {
+    if docker ps -a | grep $CONTAINER >&/dev/null ; then
+        docker start $CONTAINER >&/dev/null
+    else
+        docker run -d --network host --name $CONTAINER $IMAGE start-cups >&/dev/null
+    fi
+}
+
+stop   () { docker stop $CONTAINER >&/dev/null ; }
+remove () { docker rm   $CONTAINER >&/dev/null ; }
+
+status () { 
+    docker ps | grep $CONTAINER >&/dev/null \
+        && while ! docker logs $CONTAINER | head -1 | grep . >&/dev/null ; do sleep 1; done \
+        && docker logs $CONTAINER | grep "Starting Common Unix Printing System: cupsd." >&/dev/null
+}
+
+is_connected () { tail -1 $CLIENTCONF 2>/dev/null | grep -E "^$SRV_REGEXP" >&/dev/null ; }
+connect      () { ! is_connected && echo "ServerName $SRV_ADDRESS" >> $CLIENTCONF ; }
+disconnect   () {   is_connected && sed -i -r -e '/^'"($SRV_REGEXP)"'/d' $CLIENTCONF ; }
+
+if      [ "$1" == start ] ; then
+    echo -n "Starting $CONTAINER ... "
+    start
+    { status && echo DONE ; } || echo FAIL
+elif    [ "$1" == stop ] ; then
+    echo -n "Stopping $CONTAINER ... "
+    stop
+    echo "DONE"
+elif    [ "$1" == restart ] ; then
+    echo -n "Restarting $CONTAINER ... "
+    stop
+    start
+    echo "DONE"
+elif    [ "$1" == status ] ; then
+    echo -n "Status of $CONTAINER ...               " ; { status       && echo UP ; } || echo DOWN
+    echo -n "Status of connection to $CONTAINER ... " ; { is_connected && echo UP ; } || echo DOWN
+elif    [ "$1" == reset ] ; then
+    echo -n "Resetting $CONTAINER ... "
+    stop
+    remove
+    echo "DONE"
+elif    [ "$1" == connect ] ; then
+    [ "$(id -u)" -gt 0 ] && echo "'connect' needs root privileges." && exit 1
+    echo -n "Connecting your local CUPS to $CONTAINER ... "
+    connect
+    echo "DONE"
+    echo "You should restart your local CUPS now."
+elif    [ "$1" == disconnect ] ; then
+    [ "$(id -u)" -gt 0 ] && echo "'connect' needs root privileges."  && exit 1
+    echo -n "Disconnecting your local CUPS from $CONTAINER ... "
+    disconnect
+    echo "DONE"
+    echo "You should restart your local CUPS now."
+else
+    echo "Usage: $ME [start|stop|restart|status|reset|connect|disconnect]"
+    cat <<EOF
+
+    start       Start $CONTAINER.
+    stop        Stop $CONTAINER.
+    restart     Restart $CONTAINER.
+    status      Return status of $CONTAINER.
+    reset       Remove $CONTAINER. All printers and settings are lost.
+    connect     Connect client to CUPS in $CONTAINER. This edits /etc/cups/client.conf and 
+                must be executed as root. Then restart your local CUPS manually.
+    disconnect  Disconnect client from CUPS in $CONTAINER. This edits /etc/cups/client.conf and 
+                must be executed as root. Then restart your local CUPS manually.
+
+EOF
+fi

@@ -1,0 +1,46 @@
+#!/bin/bash
+
+ME=$(basename "$0")
+CONTAINER=cups-docker
+ARCH=${ARCH:-amd64}
+IMAGE=${IMAGE:-cups-docker:epson-amd64}
+
+[ -z "$ARCH" ] && ARCH=amd64
+
+help () {
+cat <<EOF
+$IMAGE provides a CUPS server with drivers for all EPSON printer drivers located under:
+
+    https://download.ebz.epson.net/dsc/op/stable/debian/dists/lsb3.2/main/
+
+This image provides the following commands:
+
+    start-cups                  The actual entry point to start the CUPS server 
+                                in an container instance.
+    container-handler           Dump a script that allows you to integrate the
+                                CUPS server within your init system.
+    help                        Print this help message.
+
+Install and use cups-docker on your system as follows:
+
+    docker run --rm -i $IMAGE container-handler > cups-docker
+    chmod +x cups-docker
+    sudo ./cups-docker connect # after that restart your local CUPS
+    ./cups-docker start
+
+Now you can integrate 'cups-docker' with your init system or autostart it, when
+you log in to your desktop environment.
+
+EOF
+}
+
+if      [ "$1" == help ] ; then
+    help
+elif    [ "$1" == start-cups ] ; then
+    /etc/init.d/cups start
+    while true; do sleep 3600 ; done
+elif    [ "$1" == container-handler ] ; then
+    sed -r -e 's/^ARCH=.*/ARCH='$ARCH'/' /bin/cups-docker
+else
+    help
+fi
