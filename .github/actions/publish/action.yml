@@ -10,10 +10,6 @@ inputs:
   docker_token:
     description: 'Token for user with push access to docker registry.'
     required: true
-outputs:
-  result:
-    description: "Error Text"
-    value: ${{ steps.check-tag-name.outputs.result }}
 runs:
   using: "composite"
   steps:
@@ -29,7 +25,7 @@ runs:
       run: |
         echo "Checking tag name: Did regex match?";
         [ -z "${{ steps.regex-match.outputs.match }}" ] \
-        && echo "result='Tag ${{ github.ref_name }} has invalid format.'" >> $GITHUB_OUTPUT \
+        && echo "result='Tag ${{ github.ref_name }} has invalid format.'" \
         && false
       shell: bash
 
