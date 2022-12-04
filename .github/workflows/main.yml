@@ -11,7 +11,8 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - uses: ./.github/actions/publish
+      - name: Publish docker image
+        uses: ./.github/actions/publish
         with:
           arch: i386
           docker_user:  ${{ secrets.DOCKER_USER }}
