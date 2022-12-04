@@ -1,12 +1,19 @@
 name: Publish docker images on docker hub
 run-name: Publishing docker images
-on:
-  release:
-    types: [published]
+# on:
+#   release:
+#     types: [published]
+on: push
 jobs:
-  Build-and-publish-for-i386:
+  Build-and-publish-for-i386: 
     runs-on: ubuntu-latest
     steps:
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ github.ref_name }}
+          regex: '^v\d+\.\d+\.\d+\$'
+
       - name: Check out repository code
         uses: actions/checkout@v3
 
@@ -17,16 +24,23 @@ jobs:
 
       - name: Create 
         run: |
+          echo $;
           ./build.sh i386
 
       - name: Tag and push 
         run: |
-          docker tag cups-docker:epson-i386 thednp/cups-docker:epson-i386
-          docker push thednp/cups-docker:epson-i386
+          IMAGE=$(cat /tmp/IMAGE);
+          docker push $IMAGE
 
   Build-and-publish-for-amd64:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ github.ref_name }}
+          regex: '^v\d+\.\d+\.\d+\$'
+
       - name: Check out repository code
         uses: actions/checkout@v3
 
@@ -41,5 +55,5 @@ jobs:
 
       - name: Tag and push 
         run: |
-          docker tag cups-docker:epson-amd64 thednp/cups-docker:epson-amd64
-          docker push thednp/cups-docker:epson-amd64
+          IMAGE=$(cat /tmp/IMAGE);
+          docker push $IMAGE
