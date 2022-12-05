@@ -10,8 +10,8 @@ inputs:
   docker_token:
     description: 'Token for user with push access to docker registry.'
     required: true
-  docker_token:
-    tag: 'Upload image under additional tag (e.g. latest).'
+  tag:
+    description: 'Upload image under additional tag (e.g. latest).'
     default: ""
     required: false
 
