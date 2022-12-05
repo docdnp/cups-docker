@@ -33,30 +33,29 @@ runs:
     - name: Login to docker hub
       id: login-to-docker-hub
       run: |
+        echo "Login to docker registry...";
+        export PATH=$PATH:${{ github.action_path }};
         echo "${{ inputs.docker_token }}" \
           | docker login -u "${{ inputs.docker_user }}" --password-stdin \
-          || error "ERROR: Login to docker registry failed."
+          || error "Login to docker registry failed."
       shell: bash
 
     - name: Create 
       id: create
       run: |
+        echo "Building containter image...";
+        export PATH=$PATH:${{ github.action_path }};
         ./build.sh ${{ inputs.arch }} ${{ github.ref_name }} \
-          || {
-            echo "ERROR: Building docker image failed.";
-            false;
-          }
-        true
+          || error "Building docker image failed."
       shell: bash
 
     - name: Tag and push 
       id: tag-and-push
       run: |
+        echo "Pushing image...";
+        export PATH=$PATH:${{ github.action_path }};
         IMAGE=$(cat /tmp/IMAGE);
         docker push $IMAGE \
-          || {
-            echo "ERROR: Pushing $IMAGE to docker registry failed.";
-            false;
-          }
+          || error "Pushing $IMAGE to docker registry failed."
         true
       shell: bash
