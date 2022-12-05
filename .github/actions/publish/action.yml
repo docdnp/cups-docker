@@ -27,7 +27,7 @@ runs:
         alias error=${{ github.action_path }}/error;
         REMATCH="${{ steps.regex-match.outputs.match }}";
         REFNAME="${{ github.ref_name }}";
-        [ -z "$REMATCH" ] && error "Tag '$REFNAME' has invalid format." 
+        [ -n "$REMATCH" ] || error "Tag '$REFNAME' has invalid format." 
       shell: bash
 
     - name: Login to docker hub
