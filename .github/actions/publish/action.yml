@@ -10,6 +10,11 @@ inputs:
   docker_token:
     description: 'Token for user with push access to docker registry.'
     required: true
+  docker_token:
+    tag: 'Upload image under additional tag (e.g. latest).'
+    default: ""
+    required: false
+
 runs:
   using: "composite"
   steps:
@@ -57,5 +62,11 @@ runs:
         IMAGE=$(cat /tmp/IMAGE);
         docker push $IMAGE \
           || error "Pushing $IMAGE to docker registry failed."
-        true
+        [ -z "${{ inputs.tag }}" ] || {
+          NEWIMAGE=$(echo $IMAGE | sed 's/:.*/:'${{ inputs.tag }}'/');
+          docker tag $IMAGE $NEWIMAGE \
+            || error "Couldn't add tag for $IMAGE => $NEWIMAGE";
+          docker push $NEWIMAGE \
+            || error "Pushing $NEWIMAGE to docker registry failed."
+        }
       shell: bash

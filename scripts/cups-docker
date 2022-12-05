@@ -4,7 +4,7 @@ ME=$(basename "$0")
 
 CONTAINER=cups-docker
 ARCH=${ARCH:-amd64}
-IMAGE=${IMAGE:-cups-docker:epson-amd64}
+IMAGE=${IMAGE:-thednp/cups-docker:epson-amd64}
 SRV_ADDRESS="127.0.0.1:632"
 SRV_REGEXP="[[:blank:]]*ServerName[[:blank:]]+$SRV_ADDRESS"
 COMMENT='^[[:blank:]]*#*[[:blank:]]*'

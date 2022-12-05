@@ -28,7 +28,7 @@ docker run --rm -i thednp/cups-docker:epson-amd64-v1.0.0
 ``` 
 This results in:
 ```
-thednp/cups-docker:epson-amd64-v1.0.0 provides a CUPS server with drivers for all EPSON printer drivers located under:
+thednp/cups-docker provides a CUPS server with drivers for all EPSON printer drivers located under:
 
     https://download.ebz.epson.net/dsc/op/stable/debian/dists/lsb3.2/main/
 
@@ -42,14 +42,13 @@ This image provides the following commands:
 
 Install and use cups-docker on your system as follows:
 
-    docker run --rm -i thednp/cups-docker:epson-amd64-v1.0.0 container-handler > cups-docker
+    docker run --rm -i thednp/cups-docker container-handler > cups-docker
     chmod +x cups-docker
     sudo ./cups-docker connect # after that restart your local CUPS
     ./cups-docker start
 
 Now you can integrate 'cups-docker' with your init system or autostart it, when
 you log in to your desktop environment.
-
 ```
 When you read this output carefully and follow its steps everything should be clear and self-explaining.
 
