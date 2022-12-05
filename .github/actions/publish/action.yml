@@ -24,7 +24,7 @@ runs:
       id: check-tag-name
       run: |
         echo "Checking tag name: Did regex match? => [${{ steps.regex-match.outputs.match }}]";
-        alias error=${{ github.action_path }}/error;
+        export PATH=$PATH:${{ github.action_path }};
         REMATCH="${{ steps.regex-match.outputs.match }}";
         REFNAME="${{ github.ref_name }}";
         [ -n "$REMATCH" ] || error "Tag '$REFNAME' has invalid format." 
