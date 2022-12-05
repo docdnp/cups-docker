@@ -29,8 +29,8 @@ ARG IMAGE
 ENV ARCH=$ARCH
 ENV IMAGE=$IMAGE
 
-COPY entrypoint /bin
-COPY cups-docker /bin
+COPY scripts/entrypoint /bin
+COPY scripts/cups-docker /bin
 
 ENTRYPOINT [ "/bin/entrypoint" ]
 CMD [ "help" ]
