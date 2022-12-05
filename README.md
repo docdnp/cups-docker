@@ -52,3 +52,6 @@ you log in to your desktop environment.
 
 ```
 When you read this output carefully and follow its steps everything should be clear and self-explaining.
+
+## Docker images
+See https://hub.docker.com/r/thednp/cups-docker for the built and released docker images.
