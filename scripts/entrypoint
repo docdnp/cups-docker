@@ -3,9 +3,8 @@
 ME=$(basename "$0")
 CONTAINER=cups-docker
 ARCH=${ARCH:-amd64}
-IMAGE=${IMAGE:-cups-docker:epson-amd64}
-
-[ -z "$ARCH" ] && ARCH=amd64
+IMAGE=${IMAGE:-thednp/cups-docker:epson-amd64}
+[[ "$IMAGE" =~ :epson-amd64 ]] && IMAGE=thednp/cups-docker
 
 help () {
 cat <<EOF
