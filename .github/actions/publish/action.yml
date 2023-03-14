@@ -1,0 +1,61 @@
+name: 'Publish docker image'
+description: 'This action publishes a docker image for valid tags on basis of a given architecture.'
+inputs:
+  arch:  # id of input
+    description: 'Either "amd64" or "i386".'
+    required: true
+  docker_user:
+    description: 'Username with push access to docker registry.'
+    required: true
+  docker_token:
+    description: 'Token for user with push access to docker registry.'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Prepare checking tag name
+      uses: actions-ecosystem/action-regex-match@v2
+      id: regex-match
+      with:
+        text: ${{ github.ref_name }}
+        regex: '^v\d+\.\d+\.\d+$'
+
+    - name: Check tag name
+      id: check-tag-name
+      run: |
+        echo "Checking tag name: Did regex match? => [${{ steps.regex-match.outputs.match }}]";
+        export PATH=$PATH:${{ github.action_path }};
+        REMATCH="${{ steps.regex-match.outputs.match }}";
+        REFNAME="${{ github.ref_name }}";
+        [ -n "$REMATCH" ] || error "Tag '$REFNAME' has invalid format." 
+      shell: bash
+
+    - name: Login to docker hub
+      id: login-to-docker-hub
+      run: |
+        echo "Login to docker registry...";
+        export PATH=$PATH:${{ github.action_path }};
+        echo "${{ inputs.docker_token }}" \
+          | docker login -u "${{ inputs.docker_user }}" --password-stdin \
+          || error "Login to docker registry failed."
+      shell: bash
+
+    - name: Create 
+      id: create
+      run: |
+        echo "Building containter image...";
+        export PATH=$PATH:${{ github.action_path }};
+        ./build.sh ${{ inputs.arch }} ${{ github.ref_name }} \
+          || error "Building docker image failed."
+      shell: bash
+
+    - name: Tag and push 
+      id: tag-and-push
+      run: |
+        echo "Pushing image...";
+        export PATH=$PATH:${{ github.action_path }};
+        IMAGE=$(cat /tmp/IMAGE);
+        docker push $IMAGE \
+          || error "Pushing $IMAGE to docker registry failed."
+        true
+      shell: bash
