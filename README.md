@@ -1,3 +1,4 @@
+[![Publish docker images on docker hub](https://github.com/docdnp/cups-docker/actions/workflows/main.yml/badge.svg)](https://github.com/docdnp/cups-docker/actions/workflows/main.yml)
 # cups-docker
 Docker container for old EPSON printers on basis of Debian Jessie.
 
